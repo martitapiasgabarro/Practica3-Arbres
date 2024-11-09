@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Main {
@@ -72,12 +73,77 @@ public class Main {
             return;
         }
 
-        for (File file : folder.listFiles()) {
-            BinaryTree studentTree = new BinaryTree(file.getPath());
-            students.addStudent(studentTree);
+        for (File file : Objects.requireNonNull(folder.listFiles())) {
+            if (file.getName().endsWith(".txt")) {
+                try {
+                    BinaryTree studentTree = loadBinaryTreeFromFile(file);
+                    students.addStudent(studentTree);
+                    System.out.println("Estudiant carregat des de: " + file.getName());
+                } catch (IOException e) {
+                    System.out.println("Error al llegir el fitxer " + file.getName() + ": " + e.getMessage());
+                }
+            }
         }
-        System.out.println("Estudiants carregats des de " + folderPath);
     }
+
+
+    private BinaryTree loadBinaryTreeFromFile(File file) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String line;
+        BinaryTree tree = new BinaryTree(); //Suposar que es buit
+
+        while ((line = reader.readLine()) != null) {
+            if (line.contains("Name:")) {
+                Person person = parseStudentData(line);
+                tree.addNode(person, ""); // Afegir  l'arbre, inicialment com arrel
+            } else if (line.trim().equals(";")) {
+                // Si hi ha un ';', vol dir que el node no té fills
+                break;
+            }
+        }
+        reader.close();
+        return tree;
+    }
+
+    private Person parseStudentData(String line) {
+        //Format de la linia: "Name: <name>, place of Origin: <place>, marital status: <status>"
+        String name = extractValue(line, "Name: ");
+        String placeOfOrigin = extractValue(line, "place of Origin: ");
+        String maritalStatusStr = extractValue(line, "marital status: ");
+
+        // Convertir el estat civil de text a un valor int
+        int maritalStatus = convertMaritalStatus(maritalStatusStr);
+
+        return new Person(name, placeOfOrigin, maritalStatus);
+    }
+
+    private int convertMaritalStatus(String status) {
+        switch (status.trim().toLowerCase()) {
+            case "single":
+                return 0;
+            case "married":
+                return 1;
+            case "divorced":
+                return 2;
+            case "widowed":
+                return 3;
+            default:
+                return -1; // Estat desconegut
+        }
+    }
+
+
+
+    private String extractValue(String line, String key) {
+        int startIdx = line.indexOf(key) + key.length();
+        int endIdx = line.indexOf(",", startIdx);
+        if (endIdx == -1) {
+            endIdx = line.length(); // Si no hay coma, el valor es hasta el final de la línea
+        }
+        return line.substring(startIdx, endIdx).trim();
+    }
+
+
 
     private void saveAllStudents() {
         for (String studentName : students.getAllStudentsName()) {

@@ -27,19 +27,33 @@ public class BinaryTree {
         }
     }
 
-    // Mantenim `preorderLoad` com a privat
+
     private NodeA preorderLoad(BufferedReader br) throws IOException {
         String line = br.readLine();
         if (line == null || line.equals(";")) {
             return null;
         }
 
-        Person person = new Person(line);
+        String[] parts = line.split(";");
+        Person person = new Person(parts[0].trim());
         NodeA node = new NodeA(person);
-        node.left = preorderLoad(br);
-        node.right = preorderLoad(br);
+
+        if (parts.length == 1) {
+            node.left = preorderLoad(br);
+            node.right = null;
+        } else if (parts.length == 2) {
+            node.left = preorderLoad(br);
+            node.right = preorderLoad(br);
+        } else if (parts.length == 3) {
+            node.left = null;
+            node.right = null;
+        } else {
+            throw new IOException("Línia malformada: " + line);
+        }
+
         return node;
     }
+
 
 
     public String getName() {

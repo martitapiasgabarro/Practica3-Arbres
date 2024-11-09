@@ -22,7 +22,8 @@ public class Main {
             System.out.println("3. Afegir un estudiant");
             System.out.println("4. Modificar un estudiant");
             System.out.println("5. Mostrar el informe");
-            System.out.println("6. Guardar i Sortir");
+            System.out.println("6. Eliminar alumne");
+            System.out.println("7. Guardar i Sortir");
             System.out.print("Tria una opció: ");
 
             option = scanner.nextInt();
@@ -49,13 +50,19 @@ public class Main {
                     mostrarInforme();
                     break;
                 case 6:
+                    System.out.print("Introdueix el nom de l'estudiant a eliminar: ");
+                    String name6 = scanner.nextLine(); // Cambiat a 'name6' per evitar conflictes
+                    students.removeStudent(name6); // Crida al mètode 'removeStudent'
+                    System.out.println("Estudiant eliminat.");
+                    break;
+                case 7:
                     saveAllStudents();
                     System.out.println("Dades guardades. Sortint del programa.");
                     break;
                 default:
                     System.out.println("Opció no vàlida. Si us plau, tria una opció vàlida.");
             }
-        } while (option != 6);
+        } while (option != 7);
     }
 
     private void readAllStudents(String folderPath) {

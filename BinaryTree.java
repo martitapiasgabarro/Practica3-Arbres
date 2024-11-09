@@ -69,21 +69,36 @@ public class BinaryTree {
     }
 
     public void displayTree() {
-        displayTreeRecursive(root, 0);
+        displayTreeRecursive(root, 0, " ");
     }
 
-    private void displayTreeRecursive(NodeA node, int level) {
+    private void displayTreeRecursive(NodeA node, int level, String prefix) {
         if (node == null) {
             return;
         }
 
-        for (int i = 0; i < level; i++) {
-            System.out.print("  ");
+        // Imprimir el nodo actual
+        if (level > 0) {
+            System.out.print(prefix);
         }
         System.out.println(node.data);
 
-        displayTreeRecursive(node.left, level + 1);
-        displayTreeRecursive(node.right, level + 1);
+        // Recursión para el subárbol izquierdo
+        if (node.left != null || node.right != null) {
+            // Si existe hijo izquierdo, se conecta con "/"
+            if (node.left != null) {
+                displayTreeRecursive(node.left, level + 1, " / ");
+            } else {
+                displayTreeRecursive(null, level + 1, "   ");
+            }
+
+            // Si existe hijo derecho, se conecta con "\"
+            if (node.right != null) {
+                displayTreeRecursive(node.right, level + 1, " \\ ");
+            } else {
+                displayTreeRecursive(null, level + 1, "   ");
+            }
+        }
     }
 
     public void preorderSave() {

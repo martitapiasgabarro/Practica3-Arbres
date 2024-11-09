@@ -7,6 +7,9 @@ public class Main {
 
     public static void main(String[] args) {
         Main program = new Main();
+        System.out.print("Introdueix la ruta de la carpeta amb els estudiants: ");
+        String folderPath = program.scanner.nextLine();
+        program.readAllStudents(folderPath);
         program.showMenu();
     }
 
@@ -26,24 +29,31 @@ public class Main {
             scanner.nextLine(); // Netejar el buffer
 
             switch (option) {
-                case 1 -> displayAllStudentsNames();
-                case 2 -> {
+                case 1:
+                    displayAllStudentsNames();
+                    break;
+                case 2:
                     System.out.print("Introdueix el nom de l'estudiant: ");
                     String name = scanner.nextLine();
                     showStudentFamily(name);
-                }
-                case 3 -> addNewStudent();
-                case 4 -> {
+                    break;
+                case 3:
+                    addNewStudent();
+                    break;
+                case 4:
                     System.out.print("Introdueix el nom de l'estudiant per modificar: ");
-                    String name = scanner.nextLine();
+                    name = scanner.nextLine();
                     modifyStudent(name);
-                }
-                case 5 -> mostrarInforme();
-                case 6 -> {
+                    break;
+                case 5:
+                    mostrarInforme();
+                    break;
+                case 6:
                     saveAllStudents();
                     System.out.println("Dades guardades. Sortint del programa.");
-                }
-                default -> System.out.println("Opció no vàlida. Si us plau, tria una opció vàlida.");
+                    break;
+                default:
+                    System.out.println("Opció no vàlida. Si us plau, tria una opció vàlida.");
             }
         } while (option != 6);
     }

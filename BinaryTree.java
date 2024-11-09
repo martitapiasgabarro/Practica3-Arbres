@@ -126,21 +126,36 @@ public class BinaryTree {
         preorderSaveRecursive(node.right, bw);
     }
 
-    public void removePerson(String name) {
-        root = removePersonRecursive(root, name);
+    public boolean removePerson(String name) {
+        return removePersonRecursive(root, name);
     }
 
-    private NodeA removePersonRecursive(NodeA node, String name) {
-        if (node == null) return null;
 
-        if (node.data.getName().equals(name)) {
-            return null;
+
+    private boolean removePersonRecursive(NodeA node, String name) {
+        if (node == null) {
+            return false;
         }
 
-        node.left = removePersonRecursive(node.left, name);
-        node.right = removePersonRecursive(node.right, name);
-        return node;
+        if (node.data.getName().equals(name)) {
+            // Es troba el node, l'eliminem retornant 'true'
+            return true;
+        }
+
+        boolean foundInLeft = removePersonRecursive(node.left, name);
+        boolean foundInRight = removePersonRecursive(node.right, name);
+
+
+        if (foundInLeft) {
+            node.left = null;
+        }
+
+        if (foundInRight) {
+            node.right = null;
+        }
+        return foundInLeft || foundInRight;
     }
+
 
     public boolean isFrom(String place) {
         return root != null && root.data.getPlaceOfOrigin().equalsIgnoreCase(place);

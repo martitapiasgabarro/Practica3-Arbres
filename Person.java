@@ -31,6 +31,21 @@ public class Person {
         }
     }
 
+    // Getters
+    public String getName() {
+        return name;
+    }
+
+    public String getPlaceOfOrigin() {
+        return placeOfOrigin;
+    }
+
+    public int getMaritalStatus() {
+        return maritalStatus;
+    }
+
+
+
     private int parseMaritalStatus(String status) {
         return switch (status.toLowerCase()) {
             case "single" -> SINGLE;
@@ -63,32 +78,5 @@ public class Person {
         return "Name: " + name + ", place of Origin: " + placeOfOrigin + ", marital status: " + status;
     }
 
-    // Getters
-    public String getName() {
-        return name;
-    }
 
-    public String getPlaceOfOrigin() {
-        return placeOfOrigin;
-    }
-
-    public int getMaritalStatus() {
-        return maritalStatus;
-    }
-
-    // Setters
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPlaceOfOrigin(String placeOfOrigin) {
-        this.placeOfOrigin = placeOfOrigin;
-    }
-
-    public void setMaritalStatus(int maritalStatus) {
-        if (maritalStatus < 0 || maritalStatus > 3) {
-            throw new IllegalArgumentException("Invalid marital status.");
-        }
-        this.maritalStatus = maritalStatus;
-    }
 }

@@ -66,90 +66,47 @@ public class Main {
         } while (option != 7);
     }
 
+
+
     private void readAllStudents(String folderPath) {
         File folder = new File(folderPath);
         if (!folder.exists() || !folder.isDirectory()) {
-            System.out.println("Carpeta no vàlida.");
+            System.out.println("Carpeta no válida.");
             return;
         }
 
+        // Iteramos sobre los archivos de la carpeta
         for (File file : Objects.requireNonNull(folder.listFiles())) {
             if (file.getName().endsWith(".txt")) {
-                try {
-                    BinaryTree studentTree = loadBinaryTreeFromFile(file);
-                    students.addStudent(studentTree);
-                    System.out.println("Estudiant carregat des de: " + file.getName());
-                } catch (IOException e) {
-                    System.out.println("Error al llegir el fitxer " + file.getName() + ": " + e.getMessage());
-                }
+                // Cargar el árbol de estudiantes desde el archivo
+                BinaryTree studentTree = new BinaryTree(file.getPath());  // Cargar usando el constructor que lee desde archivo
+                students.addStudent(studentTree);  // Añadir el árbol cargado a la lista de estudiantes
+                System.out.println("Estudiante cargado desde: " + file.getName());
             }
         }
     }
-
-
-    private BinaryTree loadBinaryTreeFromFile(File file) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        String line;
-        BinaryTree tree = new BinaryTree(); //Suposar que es buit
-
-        while ((line = reader.readLine()) != null) {
-            if (line.contains("Name:")) {
-                Person person = parseStudentData(line);
-                tree.addNode(person, ""); // Afegir  l'arbre, inicialment com arrel
-            } else if (line.trim().equals(";")) {
-                // Si hi ha un ';', vol dir que el node no té fills
-                break;
-            }
-        }
-        reader.close();
-        return tree;
-    }
-
-    private Person parseStudentData(String line) {
-        //Format de la linia: "Name: <name>, place of Origin: <place>, marital status: <status>"
-        String name = extractValue(line, "Name: ");
-        String placeOfOrigin = extractValue(line, "place of Origin: ");
-        String maritalStatusStr = extractValue(line, "marital status: ");
-
-        // Convertir el estat civil de text a un valor int
-        int maritalStatus = convertMaritalStatus(maritalStatusStr);
-
-        return new Person(name, placeOfOrigin, maritalStatus);
-    }
-
-    private int convertMaritalStatus(String status) {
-        switch (status.trim().toLowerCase()) {
-            case "single":
-                return 0;
-            case "married":
-                return 1;
-            case "divorced":
-                return 2;
-            case "widowed":
-                return 3;
-            default:
-                return -1; // Estat desconegut
-        }
-    }
-
-
-
-    private String extractValue(String line, String key) {
-        int startIdx = line.indexOf(key) + key.length();
-        int endIdx = line.indexOf(",", startIdx);
-        if (endIdx == -1) {
-            endIdx = line.length(); // Si no hay coma, el valor es hasta el final de la línea
-        }
-        return line.substring(startIdx, endIdx).trim();
-    }
-
-
 
     private void saveAllStudents() {
         for (String studentName : students.getAllStudentsName()) {
             BinaryTree studentTree = students.getStudent(studentName);
             if (studentTree != null) {
-                studentTree.preorderSave();
+
+                try {
+                    File folder = new File("Files");
+                    if (!folder.exists()) {
+                        folder.mkdir();
+                    }
+
+                    File file = new File(folder, studentName + ".txt");
+
+                    try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                        studentTree.preorderSave();  // Guardar el árbol en preorden
+                    }
+
+                    System.out.println("Estudiant guardat correctament: " + studentName);
+                } catch (IOException e) {
+                    System.out.println("Error al guardar el árbol del estudiante " + studentName + ": " + e.getMessage());
+                }
             }
         }
     }

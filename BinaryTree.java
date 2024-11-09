@@ -27,32 +27,36 @@ public class BinaryTree {
         }
     }
 
-
     private NodeA preorderLoad(BufferedReader br) throws IOException {
         String line = br.readLine();
         if (line == null || line.equals(";")) {
             return null;
         }
 
+        // Partim la línia per veure si hi ha un `;`
         String[] parts = line.split(";");
         Person person = new Person(parts[0].trim());
         NodeA node = new NodeA(person);
 
         if (parts.length == 1) {
-            node.left = preorderLoad(br);
-            node.right = null;
-        } else if (parts.length == 2) {
+            // No hi ha cap `;`, per tant, el node té tant fill esquerre com dret
             node.left = preorderLoad(br);
             node.right = preorderLoad(br);
+        } else if (parts.length == 2) {
+            // Només hi ha un `;`, així que només té fill esquerre
+            node.left = preorderLoad(br);
+            node.right = null; // No té fill dret
         } else if (parts.length == 3) {
+            // Té dos `;`, així que no té fills
             node.left = null;
             node.right = null;
         } else {
-            throw new IOException("Línia malformada: " + line);
+            throw new IOException("Línia malformada: " + line); // Si hi ha més parts, l'entrada no és vàlida
         }
 
         return node;
     }
+
 
 
 
@@ -64,7 +68,7 @@ public class BinaryTree {
         root = addNodeRecursive(root, person, level, 0);
     }
 
-    // Mètode recursiu per afegir un node a l'arbre
+
     private NodeA addNodeRecursive(NodeA node, Person person, String level, int index) {
         if (node == null) {
             return new NodeA(person);
@@ -99,17 +103,28 @@ public class BinaryTree {
         displayTreeRecursive(node.right, level + 1);
     }
 
+
     public void preorderSave() {
         if (root == null) {
             throw new IllegalStateException("L'arbre està buit.");
         }
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(root.data.getName() + ".txt"))) {
+        // Ruta de la carpeta 'Files'
+        File folder = new File("Files");
+        if (!folder.exists()) {
+            folder.mkdir(); // Crear la carpeta 'Files' si no existe
+        }
+
+        // Ruta completa con el nombre del archivo dentro de la carpeta 'Files'
+        File file = new File(folder, root.data.getName() + ".txt");
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
             preorderSaveRecursive(root, bw);
         } catch (IOException e) {
             System.out.println("Error en desar l'arbre: " + e.getMessage());
         }
     }
+
 
     private void preorderSaveRecursive(NodeA node, BufferedWriter bw) throws IOException {
         if (node == null) {

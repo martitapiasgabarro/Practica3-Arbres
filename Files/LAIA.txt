@@ -1,5 +1,3 @@
 Name: LAIA, place of Origin: BARCELONA, marital status: Married
 ;
-Name: MARTI, place of Origin: MATARO, marital status: Married
-;
 ;

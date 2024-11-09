@@ -51,8 +51,8 @@ public class Main {
                     break;
                 case 6:
                     System.out.print("Introdueix el nom de l'estudiant a eliminar: ");
-                    String name6 = scanner.nextLine(); // Cambiat a 'name6' per evitar conflictes
-                    students.removeStudent(name6); // Crida al mètode 'removeStudent'
+                    String studentNameToDelete = scanner.nextLine();
+                    students.removeStudent(studentNameToDelete);
                     System.out.println("Estudiant eliminat.");
                     break;
                 case 7:
@@ -87,6 +87,7 @@ public class Main {
             }
         }
     }
+
 
     private void displayAllStudentsNames() {
         var names = students.getAllStudentsName();
